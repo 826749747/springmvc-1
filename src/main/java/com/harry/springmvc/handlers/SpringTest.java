@@ -1,6 +1,7 @@
 package com.harry.springmvc.handlers;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -9,6 +10,55 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class SpringTest {
 	
 	private static final String SUCCESS = "success";
+	
+	@RequestMapping(value="/testRest/{id}",method = RequestMethod.GET)
+	public String testRest(@PathVariable("id") Integer id) {
+		System.out.println("test Rest GET " + id);
+		return SUCCESS;
+	}
+	
+	@RequestMapping(value="/testRest",method = RequestMethod.POST)
+	public String testRest() {
+		System.out.println("test Rest POST.."  );
+		return SUCCESS;
+	}
+	
+	@RequestMapping(value="/testRest/{id}",method = RequestMethod.PUT)
+	public String testRestPut(@PathVariable("id") Integer id) {
+		System.out.println("test Rest PUT" + id);
+		return SUCCESS;
+	}
+	
+	@RequestMapping(value="/testRest/{id}",method = RequestMethod.DELETE)
+	public String testRestDelete(@PathVariable("id") Integer id) {
+		System.out.println("test Rest Delete" + id);
+		return SUCCESS;
+	}
+	
+	
+	
+	/**
+	 * @PathVariable 可以映射URL中的占位符到目标方法的参数中
+	 * */
+	@RequestMapping("/testPathVariable/{id}")
+	public String testPathVariable(@PathVariable("id") int id) {
+		
+		System.out.println("testPathVariable .." + id);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 使用通配符URL
+	 * 1.*代表任意字符
+	 * 2.**多层路径
+	 * 3.？一个字符
+	 * */
+	@RequestMapping("/testPath/*/abc")
+	public String testPath() {
+		
+		System.out.println("test path.....");
+		return SUCCESS;
+	}
 	
 	/**
 	 * 了解可以使用params和headers 来更加精确的映射请求，params和headers支持简单的表达式
