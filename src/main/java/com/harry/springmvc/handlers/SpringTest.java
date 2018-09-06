@@ -29,16 +29,45 @@ public class SpringTest {
 	
 	private static final String SUCCESS = "success";
 	
+	
+	
+	/**
+	 *  有@ModelAttribute 标记的方法，会在每个目标方法执行之前被SpringMVC 调用
+	 * */
 	@ModelAttribute
 	public void getUser(@RequestParam(value ="id",required =false) Integer id,Map<String,Object> map) {
 		if (!"".equals(id)) {
+			//a.模拟从数据库中获取对象
 			User user = new User(1,"Tom","123456","tom@cc.com",12);
 			System.out.println("从数据库获取一个对象 : "+ user );
 			map.put("user", user);
 		}
 	}
 	
-	
+	/**
+	 * 运行流程：
+	 * 1.执行@ModelAttribute 注解修饰的方法：从数据库中取出对象，把对象放入到了Map中。键为：user
+	 * 2.SpringMVC 从Map中取出User 对象，并把表单的请求参数赋给该User 对象的属性
+	 * 3.SpringMVC 把上述对象传入目标方法的参数
+	 * 
+	 * 注意： 在ModelAttribute修饰的方法中，放入到Map时的键需要和目标方法入参类型的第一个字母小写的字符串的一致！ 
+	 * 
+	 * 源码分析的流程：
+	 * 1.调用@ModelAttribute 注解修饰的方法。实际上把@ModelAttribute 方法中的map中的数据放在 implicitModel中。
+	 * 2.解析请求处理器的目标参数，实际上该目标参数来自于WebDataBinder 对象的target属性
+	 * 	 1）创建WebdateBinder对象
+	 * 		1.确定objectName的属性：若传入的attrName 属性值为"",则objectName 为类名第一个字母小写
+	 * 		  *注意：attrName。 若目标方法的POJO属性使用了@ModelAttribute 来修饰，则attrName值即为@ModelAttribute的value属性值
+	 * 		2.确定target的属性
+	 * 			> 在implicitModel 中查找attrName 对应的属性值。若存在，ok
+	 * 			> *若不存在：则验证当前Handler 是否使用了 @SessionAttribute 进行修饰，若使用了，则尝试从Session 中获取attrName 所对应的属性值。
+	 * 			  若session中没有对应的属性值，则抛出了异常
+	 * 			> 若Handler 没有使用@SessionAttribute 进行修饰，或@SessionAttribute中没有使用value 值指定的Key和attrName 相匹配，
+	 * 			则通过反射创建了POJO对象
+	 * 	 2）. SpringMVC 把表单的请求参数赋给了WebDataBinder 的target 对应的属性
+	 * 	 3）. *SpringMVC 会把WebDataBinder 的atrrName 和 target 给到implicitModel.进而传到request 域对象中.
+	 * 	 4). 把WebDataBinder 的 target 作为参数传递给目标方法入参.
+	 * */
 	@RequestMapping("/testModelAttribute")
 	public String testModelAttribute(User user) {
 		System.out.println("xiugai :" + user);
