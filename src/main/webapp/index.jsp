@@ -51,13 +51,7 @@
 
 <br><br>
 
-<!-- 
-	模拟修改操作
-	1.原始数据 ： 1 ， Tom，123456,tom@cc.com,12
-	2.密码不能修改
-	3.表单回显，模拟操作直接在表单填写对应的属性值
 
- -->
 <form action="springmvc/testPojo" method = "post">
 	Username: <input type = "text" name = "username"> <br>
 	Password: <input type = "password" name = "password"> <br>
@@ -80,6 +74,13 @@
 <a href="springmvc/testSessionAttribute">test SessionAttribute</a>
 
 <br><br>
+<!-- 
+	模拟修改操作
+	1.原始数据 ： 1 ， Tom，123456,tom@cc.com,12
+	2.密码不能修改
+	3.表单回显，模拟操作直接在表单填写对应的属性值
+
+ -->
 <form action="springmvc/testModelAttribute" method = "post">
 	<input type ="hidden" name = "id" value = "1"><br>
 	username : <input type ="text" name = "username" value ="Tom"><br>
